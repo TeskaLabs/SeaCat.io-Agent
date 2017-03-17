@@ -2,7 +2,9 @@ ROOTDIR=../..
 BIN=$(ROOTDIR)/bin/scad
 LIBEXEC=yes
 
-OBJS=	main.o
+OBJS=	config.o \
+		app.o \
+		main.o
 
 # Include libtlsca
 CPPFLAGS+=-I../libtlsca/
