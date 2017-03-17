@@ -1,4 +1,5 @@
 /rules.site
+/bin/*
 
 # Object files
 *.o
