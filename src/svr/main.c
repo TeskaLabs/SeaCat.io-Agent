@@ -8,7 +8,7 @@ static void print_usage(char *argv0)
 	printf("SeaCat.io Agent %s\n", SEACAT_VERSION "");
 	printf("(C) 2014-2017 TeskaLabs Ltd\n");
 	printf("https://www.teskalabs.com/\n\n");
-	printf("Build uses %s, libev %d.%d\n\n", SSLeay_version(SSLEAY_VERSION), ev_version_major(), ev_version_minor());
+	printf("Build uses:\n\tSeaCat C-Core %s\n\t%s\n\tlibev %d.%d\n\n", seacatcc_version(), SSLeay_version(SSLEAY_VERSION), ev_version_major(), ev_version_minor());
 	printf("This product includes software developed by the OpenSSL Project\nfor use in the OpenSSL Toolkit (http://www.openssl.org/)\n\n");
 	printf("Usage: %s [ -vh ] [ -c FILE ]\n\n", argv0);
 

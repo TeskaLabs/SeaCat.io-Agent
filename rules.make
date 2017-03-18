@@ -22,8 +22,17 @@ else
 CPPFLAGS+=-DSEACAT_VERSION=\"${VERSION}-debug\"
 endif
 
-# OpenSSL
+# Detect OS
 
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+    OS = lnx
+endif
+ifeq ($(UNAME_S),Darwin)
+    OS = mac
+endif
+
+# OpenSSL
 OPENSSLINCPATH?=/usr/local/include
 OPENSSLLIBPATH?=/usr/local/lib
 

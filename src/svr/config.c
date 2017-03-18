@@ -4,6 +4,11 @@
 struct sca_config sca_config = 
 {
 	.config_file = LIBTLSCA_CONFIG_FILE,
+
+	.application_id = "io.seacat.agent",
+	.application_id_suffix = NULL, //TODO: Allow to configure this one
+
+	.var_dir = "./var", //TODO: This is from configuration
 };
 
 ///

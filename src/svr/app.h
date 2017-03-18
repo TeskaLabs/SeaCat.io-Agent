@@ -5,6 +5,14 @@ struct sca_app
 {
 	struct ft_context context;
 
+	struct ft_subscriber exit_subscriber;
+
+	// C-Core related components
+	pthread_t seacatcc_thread; // SeaCat C-Core thread
+	int seacatcc_thread_rc;
+	struct ev_async seacatcc_async_w;
+	struct ev_check seacatcc_check_w;
+
 	struct
 	{
 	} stats;
