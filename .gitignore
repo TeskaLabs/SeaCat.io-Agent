@@ -1,5 +1,6 @@
 /rules.site
 /bin/*
+/var/*
 
 # Object files
 *.o
