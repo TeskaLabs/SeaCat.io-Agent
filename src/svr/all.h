@@ -1,5 +1,5 @@
-#ifndef TLSCA__ALL_H_
-#define TLSCA__ALL_H_
+#ifndef TLSCA_SVR__ALL_H_
+#define TLSCA_SVR__ALL_H_
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -16,4 +16,4 @@ extern struct sca_app sca_app;
 #include "app.h"
 #include "reactor.h"
 
-#endif //TLSCA__ALL_H_
+#endif //TLSCA_SVR__ALL_H_

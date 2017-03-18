@@ -1,5 +1,5 @@
-#ifndef APP_SOCKS__CONFIG_H_
-#define APP_SOCKS__CONFIG_H_
+#ifndef TLSCA_SVR__CONFIG_H_
+#define TLSCA_SVR__CONFIG_H_
 
 struct sca_config
 {
@@ -16,4 +16,4 @@ extern struct sca_config sca_config;
 void sca_config_environ(void);
 bool sca_config_load(void);
 
-#endif // APP_SOCKS__CONFIG_H_
+#endif // TLSCA_SVR__CONFIG_H_

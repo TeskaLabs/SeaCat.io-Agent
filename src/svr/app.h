@@ -1,5 +1,5 @@
-#ifndef APP_SOCKS__APP_H_
-#define APP_SOCKS__APP_H_
+#ifndef TLSCA_SVR__APP_H_
+#define TLSCA_SVR__APP_H_
 
 struct sca_app
 {
@@ -30,4 +30,4 @@ void sca_app_fini(struct sca_app *);
 
 int sca_app_run(struct sca_app *);
 
-#endif //APP_SOCKS__APP_H_
+#endif //TLSCA_SVR__APP_H_
