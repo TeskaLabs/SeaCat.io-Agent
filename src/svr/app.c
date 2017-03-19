@@ -10,6 +10,9 @@ static void sca_app_on_seacatcc_async(struct ev_loop * loop, ev_async * w, int r
 
 static void sca_app_on_prepare(struct ev_loop * loop, ev_prepare * w, int revents);
 
+static void sca_app_loop_release(struct ev_loop * loop);
+static void sca_app_loop_acquire(struct ev_loop * loop);
+
 ///
 
 bool sca_app_init(struct sca_app * this)
@@ -19,6 +22,9 @@ bool sca_app_init(struct sca_app * this)
 
 	ASSERT_THIS();
 
+	this->seacatcc_write_buffer = NULL;
+	this->seacatcc_read_buffer = NULL;
+
 	ft_initialise();
 
 	ok = ft_context_init(&this->context);
@@ -26,6 +32,9 @@ bool sca_app_init(struct sca_app * this)
 
 	ok = sca_config_load();
 	if (!ok) return false;
+
+	pthread_mutex_init(&this->seacatcc_loop_lock, 0);
+	ev_set_loop_release_cb(this->context.ev_loop, sca_app_loop_release, sca_app_loop_acquire);
 
 	// Prepare listening control socket(s)
 	ft_listener_list_init(&this->cntl_listeners_list);
@@ -42,23 +51,14 @@ bool sca_app_init(struct sca_app * this)
 
 	ft_list_init(&this->cntl_list, sca_cntl_on_remove);
 
-	rc = seacatcc_init(
-		sca_config.application_id,
-		sca_config.application_id_suffix,
-		OS_NAME,
-		sca_config.var_dir,
-		sca_reactor_hook_write_ready,
-		sca_reactor_hook_read_ready,
-		sca_reactor_hook_frame_received,
-		sca_reactor_hook_frame_return,
-		sca_reactor_hook_worker_request,
-		sca_reactor_hook_evloop_heartbeat
-	);
-	if (rc != SEACATCC_RC_OK)
+	if (ft_config.log_verbose)
 	{
-		FT_FATAL("SeaCat C-Core failed to initialise: %d", rc);
-		exit(EXIT_FAILURE);
+		union seacatcc_log_mask_u mask = {.value = 0 };
+		mask.DEBUG_GENERIC = true;
+		seacatcc_log_set_mask(mask);
 	}
+
+	sca_reactor_init();
 
 	this->seacatcc_thread_rc = -1;
 
@@ -92,6 +92,8 @@ void sca_app_fini(struct sca_app * this)
 
 	ft_list_fini(&this->cntl_listeners_list);
 	ft_list_fini(&this->cntl_list);
+
+	pthread_mutex_destroy(&this->seacatcc_loop_lock);
 
 	ft_context_fini(&this->context);
 }
@@ -160,6 +162,16 @@ void sca_app_on_seacatcc_check(struct ev_loop * loop, ev_check * w, int revents)
 
 }
 
+static void sca_app_loop_release(struct ev_loop * loop)
+{
+	sca_loop_lock_release();
+}
+
+static void sca_app_loop_acquire(struct ev_loop * loop)
+{
+	sca_loop_lock_acquire();
+}
+
 ///
 
 void sca_app_on_prepare(struct ev_loop * loop, ev_prepare * w, int revents)
@@ -200,3 +212,5 @@ void sca_on_exit(struct ft_subscriber * sub, struct ft_pubsub * pubsub, const ch
 	// Stop listening on control sockets
 	ft_listener_list_cntl(&this->cntl_listeners_list, FT_LISTENER_STOP);
 }
+
+//

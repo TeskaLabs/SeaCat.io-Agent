@@ -2,6 +2,60 @@
 
 ///
 
+// SeaCat C-Core reactor
+static void sca_reactor_hook_write_ready(void ** data, uint16_t * data_len);
+static void sca_reactor_hook_read_ready(void ** data, uint16_t * data_len);
+static void sca_reactor_hook_frame_received(void * data, uint16_t frame_len);
+static void sca_reactor_hook_frame_return(void *data);
+static void sca_reactor_hook_worker_request(char worker);
+static double sca_reactor_hook_evloop_heartbeat(double now);
+
+static void sca_reactor_hook_client_state_changed(void);
+
+static void sca_reactor_log(char level, const char * message);
+
+///
+
+void sca_reactor_init()
+{
+	int rc;
+
+	seacatcc_set_discover_domain("\01s\06seacat\02io");
+	seacatcc_log_setfnct(sca_reactor_log);
+
+	memset(sca_app.seacatcc_state, '?', SEACATCC_STATE_BUF_SIZE);
+	sca_app.seacatcc_state[SEACATCC_STATE_BUF_SIZE-1] = '\0';
+
+	rc = seacatcc_init(
+		sca_config.application_id,
+		sca_config.application_id_suffix,
+		OS_NAME,
+		sca_config.var_dir,
+		sca_reactor_hook_write_ready,
+		sca_reactor_hook_read_ready,
+		sca_reactor_hook_frame_received,
+		sca_reactor_hook_frame_return,
+		sca_reactor_hook_worker_request,
+		sca_reactor_hook_evloop_heartbeat
+	);
+	if (rc != SEACATCC_RC_OK)
+	{
+		FT_FATAL("SeaCat C-Core failed to initialise: %d", rc);
+		exit(EXIT_FAILURE);
+	}
+
+	// Registed state_changed event
+	rc = seacatcc_hook_register('S', sca_reactor_hook_client_state_changed);
+	if (rc != SEACATCC_RC_OK)
+	{
+		FT_FATAL("SeaCat C-Core failed to initialise: %d", rc);
+		exit(EXIT_FAILURE);
+	}
+}
+
+
+///
+
 static void * sca_reactor_worker_ppkgen(void * p)
 {
 	seacatcc_ppkgen_worker();
@@ -27,7 +81,24 @@ void sca_reactor_hook_write_ready(void ** data, uint16_t * data_len)
 
 void sca_reactor_hook_read_ready(void ** data, uint16_t * data_len)
 {
-	fprintf(stderr, "> %s\n", __func__);
+	sca_loop_lock_acquire();
+	assert(sca_app.seacatcc_read_buffer == NULL);
+
+	sca_app.seacatcc_read_buffer = ft_pool_borrow(&sca_app.context.frame_pool, FT_FRAME_TYPE_SEACATCC_READ);
+	if (sca_app.seacatcc_read_buffer == NULL)
+	{
+		FT_ERROR("Failed to allocate frame for seacatcc read buffer");
+		goto exit;
+	}
+
+	ft_frame_format_simple(sca_app.seacatcc_read_buffer);
+	struct ft_vec * vec = ft_frame_get_vec(sca_app.seacatcc_read_buffer);
+	assert(vec != NULL);
+	*data = ft_vec_ptr(vec);
+	*data_len = ft_vec_len(vec);
+
+exit:
+	sca_loop_lock_release();
 }
 
 void sca_reactor_hook_frame_received(void * data, uint16_t frame_len)
@@ -35,9 +106,24 @@ void sca_reactor_hook_frame_received(void * data, uint16_t frame_len)
 	fprintf(stderr, "> %s\n", __func__);
 }
 
-void sca_reactor_hook_frame_return(void *data)
+void sca_reactor_hook_frame_return(void * data)
 {
+	sca_loop_lock_acquire();
+
 	fprintf(stderr, "> %s\n", __func__);
+
+	if ((sca_app.seacatcc_read_buffer != NULL) && (sca_app.seacatcc_read_buffer->data == data))
+	{
+		ft_frame_return(sca_app.seacatcc_read_buffer);
+		sca_app.seacatcc_read_buffer = NULL;
+		goto exit;
+	}
+
+
+	FT_WARN_P("Unidentified data frame returned: %p", data);
+
+exit:
+	sca_loop_lock_release();
 }
 
 void sca_reactor_hook_worker_request(char worker)
@@ -75,4 +161,45 @@ void sca_reactor_hook_worker_request(char worker)
 double sca_reactor_hook_evloop_heartbeat(double now)
 {
 	return 10.0;
+}
+
+
+void sca_reactor_log(char level, const char * message)
+{
+	sca_loop_lock_acquire();
+	_ft_log(level, NULL, "%s", message);
+	sca_loop_lock_release();
+}
+
+///
+
+bool sca_is_ready(void)
+{
+	return (sca_app.seacatcc_state[3] == 'Y') && (sca_app.seacatcc_state[4] == 'N') && (sca_app.seacatcc_state[0] != 'f');
+}
+
+const char * SCA_PUBSUB_TOPIC_SEACATCC_STATE_CHANGED = "sca/seacatcc/state-changed";
+const char * SCA_PUBSUB_TOPIC_SEACATCC_IS_READY = "sca/seacatcc/ready";
+const char * SCA_PUBSUB_TOPIC_SEACATCC_IS_NOT_READY = "sca/seacatcc/notready";
+
+void sca_reactor_hook_client_state_changed(void)
+{
+	sca_loop_lock_acquire();
+	bool old_is_ready = sca_is_ready();
+	seacatcc_state(sca_app.seacatcc_state);
+	ft_pubsub_publish(NULL , SCA_PUBSUB_TOPIC_SEACATCC_STATE_CHANGED, sca_app.seacatcc_state);
+	bool new_is_ready = sca_is_ready();
+
+	if ((old_is_ready == false) && (new_is_ready == true))
+	{
+		ft_pubsub_publish(NULL, SCA_PUBSUB_TOPIC_SEACATCC_IS_READY, sca_app.seacatcc_state);
+		FT_INFO("Client is ready ...");
+		seacatcc_yield('c');
+	}
+	else if ((old_is_ready == true) && (new_is_ready == false))
+	{
+		ft_pubsub_publish(NULL, SCA_PUBSUB_TOPIC_SEACATCC_IS_NOT_READY, sca_app.seacatcc_state);
+	}
+
+	sca_loop_lock_release();
 }
