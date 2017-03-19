@@ -137,6 +137,13 @@ void sca_reactor_hook_frame_return(void * data)
 	}
 
 
+	if ((sca_app.seacatcc_write_buffer != NULL) && (sca_app.seacatcc_write_buffer->data == data))
+	{
+		ft_frame_return(sca_app.seacatcc_write_buffer);
+		sca_app.seacatcc_write_buffer = NULL;
+		goto exit;
+	}
+
 	FT_WARN_P("Unidentified data frame returned: %p", data);
 
 exit:
