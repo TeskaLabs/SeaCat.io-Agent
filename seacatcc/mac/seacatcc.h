@@ -114,6 +114,11 @@ void seacatcc_state(char * state_buffer);
 int seacatcc_set_proxy_server_worker(const char * proxy_host, const char * proxy_port);
 
 
+// Discover
+// Call this only prior seacatcc_run() and only once
+void seacatcc_set_discover_domain(const char * domain);
+
+
 // Sockets
 // For unconfiguring a port, use: seacatcc_socket_configure_worker(0, [type], 0, [port number], NULL, NULL)
 int seacatcc_socket_configure_worker(uint16_t port, uint16_t domain, uint16_t type, uint16_t protocol, const char * peer_address, const char * peer_port);
