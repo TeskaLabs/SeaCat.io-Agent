@@ -129,8 +129,6 @@ void sca_reactor_hook_frame_return(void * data)
 {
 	sca_loop_lock_acquire();
 
-	fprintf(stderr, "> %s\n", __func__);
-
 	if ((sca_app.seacatcc_read_buffer != NULL) && (sca_app.seacatcc_read_buffer->data == data))
 	{
 		ft_frame_return(sca_app.seacatcc_read_buffer);
