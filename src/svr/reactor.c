@@ -177,7 +177,7 @@ void sca_reactor_hook_worker_request(char worker)
 
 double sca_reactor_hook_evloop_heartbeat(double now)
 {
-	return 10.0;
+	return 120.0;
 }
 
 
