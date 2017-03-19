@@ -74,10 +74,10 @@ static void optparse(int argc, char **argv)
 
 ///
 
+struct sca_app sca_app;
+
 int main(int argc, char **argv)
 {
-	struct sca_app sca_app;
-
 	// Set configuration values 
 	sca_config_environ();
 
