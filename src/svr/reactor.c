@@ -11,6 +11,8 @@ static void sca_reactor_hook_worker_request(char worker);
 static double sca_reactor_hook_evloop_heartbeat(double now);
 
 static void sca_reactor_hook_client_state_changed(void);
+static void sca_reactor_hook_connected(void);
+static void sca_reactor_hook_disconnected(void);
 
 static void sca_reactor_log(char level, const char * message);
 
@@ -48,9 +50,26 @@ void sca_reactor_init()
 	rc = seacatcc_hook_register('S', sca_reactor_hook_client_state_changed);
 	if (rc != SEACATCC_RC_OK)
 	{
-		FT_FATAL("SeaCat C-Core failed to initialise: %d", rc);
+		FT_FATAL_P("SeaCat C-Core failed to initialise: %d", rc);
 		exit(EXIT_FAILURE);
 	}
+
+	// Registed gateway_connected event
+	rc = seacatcc_hook_register('c', sca_reactor_hook_connected);
+	if (rc != SEACATCC_RC_OK)
+	{
+		FT_FATAL_P("SeaCat C-Core failed to initialise: %d", rc);
+		exit(EXIT_FAILURE);
+	}
+
+	// Registed gateway_connected event
+	rc = seacatcc_hook_register('R', sca_reactor_hook_disconnected);
+	if (rc != SEACATCC_RC_OK)
+	{
+		FT_FATAL_P("SeaCat C-Core failed to initialise: %d", rc);
+		exit(EXIT_FAILURE);
+	}
+
 }
 
 
@@ -181,6 +200,8 @@ bool sca_is_ready(void)
 const char * SCA_PUBSUB_TOPIC_SEACATCC_STATE_CHANGED = "sca/seacatcc/state-changed";
 const char * SCA_PUBSUB_TOPIC_SEACATCC_IS_READY = "sca/seacatcc/ready";
 const char * SCA_PUBSUB_TOPIC_SEACATCC_IS_NOT_READY = "sca/seacatcc/notready";
+const char * SCA_PUBSUB_TOPIC_SEACATCC_CONNECTED = "sca/seacatcc/connected";
+const char * SCA_PUBSUB_TOPIC_SEACATCC_DISCONNECTED = "sca/seacatcc/disconnected";
 
 void sca_reactor_hook_client_state_changed(void)
 {
@@ -193,7 +214,7 @@ void sca_reactor_hook_client_state_changed(void)
 	if ((old_is_ready == false) && (new_is_ready == true))
 	{
 		ft_pubsub_publish(NULL, SCA_PUBSUB_TOPIC_SEACATCC_IS_READY, sca_app.seacatcc_state);
-		FT_INFO("Client is ready ...");
+		FT_INFO("Ready ...");
 		seacatcc_yield('c');
 	}
 	else if ((old_is_ready == true) && (new_is_ready == false))
@@ -201,5 +222,21 @@ void sca_reactor_hook_client_state_changed(void)
 		ft_pubsub_publish(NULL, SCA_PUBSUB_TOPIC_SEACATCC_IS_NOT_READY, sca_app.seacatcc_state);
 	}
 
+	sca_loop_lock_release();
+}
+
+void sca_reactor_hook_connected()
+{
+	sca_loop_lock_acquire();
+	FT_INFO("Connected ...");
+	ft_pubsub_publish(NULL, SCA_PUBSUB_TOPIC_SEACATCC_CONNECTED, NULL);
+	sca_loop_lock_release();
+}
+
+void sca_reactor_hook_disconnected()
+{
+	sca_loop_lock_acquire();
+	FT_INFO("Disconnected");
+	ft_pubsub_publish(NULL, SCA_PUBSUB_TOPIC_SEACATCC_DISCONNECTED, NULL);
 	sca_loop_lock_release();
 }
