@@ -5,6 +5,7 @@ LIBEXEC=yes
 OBJS=	config.o \
 		app.o \
 		reactor.o \
+		cntl.o \
 		main.o
 
 CPPFLAGS += -DOS_NAME=\"${OS}\"

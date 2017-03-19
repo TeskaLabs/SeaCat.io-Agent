@@ -15,5 +15,6 @@ extern struct sca_app sca_app;
 #include "config.h"
 #include "app.h"
 #include "reactor.h"
+#include "cntl.h"
 
 #endif //TLSCA_SVR__ALL_H_

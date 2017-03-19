@@ -1,5 +1,5 @@
 LIB=libtlsca.a
-OBJS=void.o
+OBJS=proto_spdy.o
 
 # Include libft
 CPPFLAGS=-I$(ROOTDIR)/libft/include/
