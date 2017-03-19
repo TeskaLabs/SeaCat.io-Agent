@@ -17,4 +17,11 @@ extern struct sca_app sca_app;
 #include "reactor.h"
 #include "cntl.h"
 
+enum sca_frame_type
+{
+	FT_FRAME_TYPE_SEACATCC_WRITE = 0xFFFFF001,
+	FT_FRAME_TYPE_SEACATCC_READ  = 0xFFFFF002,
+};
+
+
 #endif //TLSCA_SVR__ALL_H_
