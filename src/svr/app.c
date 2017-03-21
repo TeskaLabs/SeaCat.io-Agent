@@ -83,6 +83,13 @@ bool sca_app_init(struct sca_app * this)
 	// Start listening
 	ft_listener_list_cntl(&this->cntl_listeners_list, FT_LISTENER_START);
 
+	// Configure port forwarding
+	rc = seacatcc_socket_configure_worker(22, AF_INET, SOCK_STREAM, 0, "127.0.0.1", "22");
+	if (rc != SEACATCC_RC_OK)
+	{
+		FT_ERROR("seacatcc_socket_configure_worker failed: %d", rc);
+	}
+
 	return true;
 }
 
