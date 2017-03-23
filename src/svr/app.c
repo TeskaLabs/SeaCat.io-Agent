@@ -9,6 +9,7 @@ static void sca_app_on_seacatcc_check(struct ev_loop * loop, ev_check *w, int re
 static void sca_app_on_seacatcc_async(struct ev_loop * loop, ev_async * w, int revents);
 
 static void sca_app_on_prepare(struct ev_loop * loop, ev_prepare * w, int revents);
+static void sca_app_on_keepalive(struct ev_loop * loop, ev_timer * w, int revents);
 
 static void sca_app_loop_release(struct ev_loop * loop);
 static void sca_app_loop_acquire(struct ev_loop * loop);
@@ -81,6 +82,12 @@ bool sca_app_init(struct sca_app * this)
 	ft_subscriber_init(&this->exit_subscriber, sca_on_exit);
 	ft_subscriber_subscribe(&this->exit_subscriber, &this->context.pubsub, FT_PUBSUB_TOPIC_EXIT);
 	this->exit_subscriber.data = this;
+
+	ev_init(&this->keepalive_w, sca_app_on_keepalive);
+	//TODO: Configure timer and even start of the timer (no-keepalive mode)
+	this->keepalive_w.repeat = 1.0;
+	ev_timer_again(this->context.ev_loop, &this->keepalive_w);
+	this->keepalive_w.data = this;
 
 	// Start listening
 	ft_listener_list_cntl(&this->cntl_listeners_list, FT_LISTENER_START);
@@ -220,6 +227,28 @@ void sca_on_exit(struct ft_subscriber * sub, struct ft_pubsub * pubsub, const ch
 
 	// Stop listening on control sockets
 	ft_listener_list_cntl(&this->cntl_listeners_list, FT_LISTENER_STOP);
+
+	ev_timer_stop(this->context.ev_loop, &this->keepalive_w);
 }
 
 //
+
+void sca_app_on_keepalive(struct ev_loop * loop, ev_timer * w, int revents)
+{
+	assert(w != NULL);
+	struct sca_app * this = w->data;
+	ASSERT_THIS();
+
+	struct ft_frame * frame = ft_pool_borrow(&this->context.frame_pool, (SPDY_CNTL_FRAME_VERSION_SPD3 << 16) | SPDY_CNTL_TYPE_PING);
+	if (frame == NULL) return;
+
+	static uint32_t ping_id = 1;
+
+	ft_frame_format_empty(frame);
+	sc_proto_spdy_ping_build(frame, ping_id);
+	ping_id += 2;
+
+	ft_frame_flip(frame);
+	sca_reactor_send(frame);
+}
+

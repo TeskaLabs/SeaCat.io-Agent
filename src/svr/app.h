@@ -8,6 +8,8 @@ struct sca_app
 	struct ft_subscriber exit_subscriber;
 	struct ev_prepare prepare_w;
 
+	struct ev_timer keepalive_w;
+
 	// C-Core related components
 	pthread_t seacatcc_thread; // SeaCat C-Core thread
 	int seacatcc_thread_rc;
