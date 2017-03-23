@@ -17,6 +17,9 @@ struct sca_app
 	struct ft_frame * seacatcc_write_buffer;
 	struct ft_frame * seacatcc_read_buffer;
 	char seacatcc_state[SEACATCC_STATE_BUF_SIZE];
+	struct ft_frame * seacatcc_write_queue;
+	struct ft_frame ** seacatcc_write_queue_last;
+
 
 	// Control socket
 	struct ft_list cntl_listeners_list;

@@ -79,6 +79,18 @@ void sca_reactor_init()
 }
 
 
+void sca_reactor_send(struct ft_frame * frame)
+{
+	assert(frame != NULL);
+	assert(*sca_app.seacatcc_write_queue_last == NULL);
+
+	if (sca_app.seacatcc_write_queue == NULL) seacatcc_yield('W');
+
+	*sca_app.seacatcc_write_queue_last = frame;
+	frame->next = NULL;
+	sca_app.seacatcc_write_queue_last = &frame->next;
+}
+
 ///
 
 static void * sca_reactor_worker_ppkgen(void * p)
@@ -101,7 +113,24 @@ static void * sca_reactor_worker_csrgen(void * p)
 
 void sca_reactor_hook_write_ready(void ** data, uint16_t * data_len)
 {
-	fprintf(stderr, "> %s\n", __func__);
+	if (sca_app.seacatcc_write_queue == NULL)
+	{
+		*data = NULL;
+		*data_len = 0;
+		return;
+	}
+
+	sca_app.seacatcc_write_buffer = sca_app.seacatcc_write_queue;
+	sca_app.seacatcc_write_queue = sca_app.seacatcc_write_buffer->next;
+	if (sca_app.seacatcc_write_queue == NULL)
+	{
+		sca_app.seacatcc_write_queue_last = &sca_app.seacatcc_write_queue;
+	}
+
+	struct ft_vec * vec = ft_frame_get_vec(sca_app.seacatcc_write_buffer);
+	assert(vec != NULL);
+	*data = ft_vec_ptr(vec);
+	*data_len = vec->capacity;
 }
 
 void sca_reactor_hook_read_ready(void ** data, uint16_t * data_len)
@@ -128,7 +157,15 @@ exit:
 
 void sca_reactor_hook_frame_received(void * data, uint16_t frame_len)
 {
-	fprintf(stderr, "> %s\n", __func__);
+	if ((sca_app.seacatcc_read_buffer == NULL) || (sca_app.seacatcc_read_buffer->data != data))
+	{
+		FT_ERROR_P("Received unexpected data, other read frame");
+	}
+
+	struct ft_frame * frame = sca_app.seacatcc_read_buffer;
+	sca_app.seacatcc_read_buffer = NULL;
+
+	ft_frame_return(frame);
 }
 
 void sca_reactor_hook_frame_return(void * data)
