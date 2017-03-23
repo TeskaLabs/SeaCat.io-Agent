@@ -7,5 +7,6 @@
 #define LIBTLSCA_CONFIG_FILE "./etc/seacat.conf"
 
 #include "proto_spdy.h"
+#include "proto_spdy_ping.h"
 
 #endif //LIBTLSCA__SC_H_
