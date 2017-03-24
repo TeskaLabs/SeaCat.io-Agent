@@ -6,8 +6,8 @@
 #include <pthread.h>
 
 #include <ft.h>
-#include <tlsca.h>
 #include <seacatcc.h>
+#include <seacatio.h>
 
 struct sca_app;
 extern struct sca_app sca_app;

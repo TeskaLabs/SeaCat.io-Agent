@@ -1,4 +1,4 @@
-LIB=libtlsca.a
+LIB=libseacatio.a
 OBJS= \
 	proto_spdy.o \
 	proto_spdy_ping.o

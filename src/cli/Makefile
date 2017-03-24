@@ -3,9 +3,9 @@ BIN=$(ROOTDIR)/bin/seacatioctl
 
 OBJS=	main.o
 
-# Include libtlsca
-CPPFLAGS+=-I../libtlsca/
-LDLIBS+=-L../libtlsca/ -ltlsca
+# Include libseacatio
+CPPFLAGS+=-I../libseacatio/
+LDLIBS+=-L../libseacatio/ -lseacatio
 
 # Include libft
 CPPFLAGS+=-I$(ROOTDIR)/libft/include/

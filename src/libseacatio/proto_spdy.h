@@ -1,5 +1,5 @@
-#ifndef LIBTLSCA__PROTO_SPDY_H_
-#define LIBTLSCA__PROTO_SPDY_H_
+#ifndef SEACATIO__PROTO_SPDY_H_
+#define SEACATIO__PROTO_SPDY_H_
 
 #define FT_FRAME_TYPE_SPDY (0xFFFFFE01)
 
@@ -221,4 +221,4 @@ static inline uint8_t * sc_ft_load_vle(uint8_t * cursor, char * value, size_t ma
 	return cursor + size;
 }
 
-#endif //LIBTLSCA__PROTO_SPDY_H_
+#endif //SEACATIO__PROTO_SPDY_H_

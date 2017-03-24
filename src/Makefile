@@ -1,4 +1,4 @@
-SUBDIRS=libtlsca svr cli
+SUBDIRS=libseacatio svr cli
 
 all: subdirs
 

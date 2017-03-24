@@ -1,5 +1,5 @@
-#ifndef LIBTLSCA__SC_H_
-#define LIBTLSCA__SC_H_
+#ifndef SEACATIO__SC_H_
+#define SEACATIO__SC_H_
 
 #include <ft.h>
 
@@ -9,4 +9,4 @@
 #include "proto_spdy.h"
 #include "proto_spdy_ping.h"
 
-#endif //LIBTLSCA__SC_H_
+#endif //SEACATIO__SC_H_

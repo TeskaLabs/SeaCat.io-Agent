@@ -8,10 +8,11 @@ OBJS=	config.o \
 		main.o
 
 CPPFLAGS += -DOS_NAME=\"${OS}\"
+LDLIBS+=-lpthread
 
-# Include libtlsca
-CPPFLAGS+=-I../libtlsca/
-LDLIBS+=-L../libtlsca/ -ltlsca -lpthread
+# Include libseacatio
+CPPFLAGS+=-I../libseacatio/
+LDLIBS+=-L../libseacatio/ -lseacatio
 
 # Include libft
 CPPFLAGS+=-I$(ROOTDIR)/libft/include/
