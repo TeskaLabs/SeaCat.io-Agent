@@ -1,6 +1,10 @@
 /rules.site
 /bin/*
 /var/*
+/seacatcc/*
+
+# Distribution files
+/seacatio-*.tar.gz
 
 # Object files
 *.o
