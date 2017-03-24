@@ -1,11 +1,11 @@
 # Optional include of machine-specific configuration
 -include $(ROOTDIR)/rules.site
 
-VERSION=$(shell git describe --abbrev=7 --tags --dirty --always)
-
 ifndef RELEASE
+VERSION=$(shell git describe --abbrev=7 --tags --dirty --always)
 CFLAGS+=-O0 -fno-strict-aliasing -ggdb -DDEBUG=1
 else
+VERSION=$(shell git describe --abbrev=7 --tags --dirty --always)-debug
 CFLAGS+=-O2 -fno-strict-aliasing -DRELEASE=1
 endif
 
@@ -13,17 +13,12 @@ ifndef NOSTRIP
 CFLAGS+=-ggdb
 endif 
 
-CFLAGS+=-Wall -std=gnu99 -static -fpic
-LDLIBS+=-lev -lm
-
-ifdef RELEASE
+CFLAGS+=-Wall -std=gnu99 -static -fpic -fPIC
+LDLIBS+=-lm
 CPPFLAGS+=-DSEACAT_VERSION=\"${VERSION}\"
-else
-CPPFLAGS+=-DSEACAT_VERSION=\"${VERSION}-debug\"
-endif
+
 
 # Detect OS
-
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
     OS = lnx
@@ -32,9 +27,16 @@ ifeq ($(UNAME_S),Darwin)
     OS = mac
 endif
 
+
+# Obtain target triplet
+# http://wiki.osdev.org/Target_Triplet
+TARGET_TRIPLET := $(shell $(CC) -dumpmachine)
+CPPFLAGS+=-DSEACAT_TARGET_TRIPLET=\"${TARGET_TRIPLET}\"
+
+
 # OpenSSL
-OPENSSLINCPATH?=/usr/local/include
-OPENSSLLIBPATH?=/usr/local/lib
+OPENSSLINCPATH?=/usr/openssl/include
+OPENSSLLIBPATH?=/usr/openssl/lib
 
 CPPFLAGS+=-I${OPENSSLINCPATH}
 
@@ -44,7 +46,21 @@ else
 LDLIBS+=${OPENSSLLIBPATH}/libssl.a ${OPENSSLLIBPATH}/libcrypto.a
 endif
 
-.PHONY: clean all subdirs
+
+# libev
+LIBEVINCPATH?=/usr/libev/include
+LIBEVLIBPATH?=/usr/libev/lib
+
+CPPFLAGS+=-I${LIBEVINCPATH}
+
+ifdef LIBEVDYNAMIC
+LDLIBS+=-L${LIBEVLIBPATH} -lev
+else
+LDLIBS+=${LIBEVLIBPATH}/libev.a
+endif
+
+
+.PHONY: clean all subdirs dist
 
 
 # Basic commands

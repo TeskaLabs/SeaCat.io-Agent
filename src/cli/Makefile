@@ -1,6 +1,5 @@
 ROOTDIR=../..
-BIN=$(ROOTDIR)/bin/scacntl
-LIBEXEC=yes
+BIN=$(ROOTDIR)/bin/seacatioctl
 
 OBJS=	main.o
 
