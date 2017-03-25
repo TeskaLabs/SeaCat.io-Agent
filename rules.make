@@ -74,7 +74,7 @@ clean:
 
 .c.o:
 	@echo " [CC]" $@
-	$(COMPILE.c) $(OUTPUT_OPTION) $<
+	@$(COMPILE.c) $(OUTPUT_OPTION) $<
 
 
 # Link commands
