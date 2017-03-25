@@ -21,5 +21,5 @@ dist: all
 	@mkdir -p $(DISTDIR) $(DISTDIR)/bin $(DISTDIR)/etc
 	@cp $(ROOTDIR)/bin/seacatiod $(ROOTDIR)/bin/seacatioctl $(DISTDIR)/bin/
 	@touch $(DISTDIR)/etc/sacatio.conf
-	@tar czf --owner=0 --group=0 $(ROOTDIR)/seacatio-$(TARGET_TRIPLET)-$(VERSION).tar.gz -C $(DISTDIR)/.. seacatio
+	@tar czf $(ROOTDIR)/seacatio-$(TARGET_TRIPLET)-$(VERSION).tar.gz --owner=0 --group=0 -C $(DISTDIR)/.. seacatio
 	@rm -rf $(DISTDIR)
