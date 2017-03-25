@@ -2,11 +2,11 @@
 -include $(ROOTDIR)/rules.site
 
 ifndef RELEASE
-VERSION=$(shell git describe --abbrev=7 --tags --dirty --always)
-CFLAGS+=-O2 -fno-strict-aliasing -DRELEASE=1
-else
 VERSION=$(shell git describe --abbrev=7 --tags --dirty --always)-debug
 CFLAGS+=-O0 -fno-strict-aliasing -ggdb -DDEBUG=1
+else
+VERSION=$(shell git describe --abbrev=7 --tags --dirty --always)
+CFLAGS+=-O2 -fno-strict-aliasing -DRELEASE=1
 endif
 
 CFLAGS+=-Wall -std=gnu99 -static -fpic -fPIC
@@ -74,7 +74,7 @@ clean:
 
 .c.o:
 	@echo " [CC]" $@
-	@$(COMPILE.c) $(OUTPUT_OPTION) $<
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
 
 
 # Link commands
