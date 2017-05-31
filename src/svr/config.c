@@ -17,6 +17,11 @@ static int sca_config_parse_handler(void * user, const char * section, const cha
 {
 	if (false) {}
 
+	else if (FT_INI_MATCH("seacatio", "suffix"))
+	{
+		sca_config.application_id_suffix = strdup(value);
+		return 1;
+	}
 
 	return 0;  // unknown section/name, error
 }
