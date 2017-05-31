@@ -52,7 +52,7 @@ static void optparse(int argc, char **argv)
 				break;
 
 			case 'c':
-				//sce_config.config_file = strdup(optarg);
+				sca_config.config_file = strdup(optarg);
 				break;
 
 			case '?':
