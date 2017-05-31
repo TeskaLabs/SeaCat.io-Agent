@@ -4,7 +4,7 @@
 #include <ft.h>
 
 #define ASSERT_THIS() assert(this != NULL)
-#define LIBTLSCA_CONFIG_FILE "./etc/seacat.conf"
+#define LIBTLSCA_CONFIG_FILE "./etc/seacatio.conf"
 
 extern const char * seacatio_ascii;
 
