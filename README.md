@@ -23,7 +23,7 @@ In order to access a shell of the device remotely via SeaCat.io, you need to con
 For OpenSSH client, append a following snipplet into your ~/.ssh/config, create that file if it doesn't exists.
 
 	Host *.seacat.io
-		ProxyCommand socat stdio SOCKS4A:access.seacat.io:%h:%p,socksport=12367
+		ProxyCommand socat stdio SOCKS4A:link.seacat.io:%h:%p,socksport=12367
 
 Then use a following line to access your device:
 
