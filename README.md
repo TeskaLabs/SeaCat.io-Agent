@@ -27,6 +27,6 @@ For OpenSSH client, append a following snipplet into your ~/.ssh/config, create 
 
 Then use a following line to access your device:
 
-	$ ssh user@d434df9b763ec138fe1a524504e994287e50caaed0a9f8b13f4c0797314bafa74ad939bc1bdd5f66899d1a.seacat.io
+	$ ssh user@d434df9b763ec138fe1a524504e994287e50caaed0a9f8b13f4c0797314bafa74ad939.seacat.io
 
 _Note: the address is copied from an admin.seacat.io_
