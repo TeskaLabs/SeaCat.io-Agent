@@ -1,0 +1,18 @@
+# Store this file at /etc/systemd/system/seacatio.service
+# Enable by systemctl enable seacatio
+# Start by systemctl start seacatio
+# or by service seacatio start
+
+[Unit]
+Description=SeaCat.io Agent Service
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/seacatio
+ExecStart=/opt/seacatio/bin/seacatiod -c ./etc/seacatio.conf
+StandardOutput=null
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
