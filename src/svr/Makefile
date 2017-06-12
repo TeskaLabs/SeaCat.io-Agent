@@ -25,3 +25,8 @@ LDLIBS+=-L$(ROOTDIR)/seacatcc/$(TARGET_TRIPLET)/ -lseacatcc
 all: subdirs | $(BIN)
 
 include $(ROOTDIR)/rules.make
+
+# Add CoreFoundation and IOKit on Macos (used for capabilties)
+ifeq ($(OS), mac)
+LDLIBS+=-framework CoreFoundation -framework IOKit
+endif
