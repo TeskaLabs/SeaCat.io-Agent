@@ -13,6 +13,7 @@ CFLAGS+=-Wall -std=gnu99 -static -fpic -fPIC
 LDLIBS+=-lm
 CPPFLAGS+=-DSEACAT_VERSION=\"${VERSION}\"
 
+SEACATIO_PREFIX=/opt/seacatio
 
 # Detect OS - must be a three letter, SeaCat compatible OS platform code
 UNAME_S := $(shell uname -s)
@@ -27,7 +28,7 @@ endif
 # Obtain target triplet
 # http://wiki.osdev.org/Target_Triplet
 TARGET_TRIPLET := $(shell $(CC) -dumpmachine)
-CPPFLAGS+=-DSEACAT_TARGET_TRIPLET=\"${TARGET_TRIPLET}\"
+CPPFLAGS+=-DSEACAT_TARGET_TRIPLET=\"${TARGET_TRIPLET}\" -DSEACATIO_PREFIX=\"${SEACATIO_PREFIX}\"
 
 
 # OpenSSL

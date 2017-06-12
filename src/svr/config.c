@@ -3,12 +3,12 @@
 
 struct sca_config sca_config = 
 {
-	.config_file = LIBTLSCA_CONFIG_FILE,
+	.config_file = SEACATIO_CONFIG_FILE,
 
 	.application_id = "io.seacat.agent",
 	.application_id_suffix = NULL, //TODO: Allow to configure this one
 
-	.var_dir = "./var", //TODO: This is from configuration
+	.var_dir = SEACATIO_PREFIX "/var", //TODO: This is from configuration
 };
 
 ///
