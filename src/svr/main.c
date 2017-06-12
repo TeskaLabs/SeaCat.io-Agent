@@ -5,7 +5,7 @@
 
 static void print_usage(char *argv0)
 {
-	printf("SeaCat.io Agent %s for %s\n", SEACAT_VERSION "", SEACAT_TARGET_TRIPLET "");
+	printf("SeaCat.io Agent %s built for %s\n", SEACAT_VERSION "", SEACAT_TARGET_TRIPLET "");
 	printf("\n%s\n", seacatio_ascii);
 	printf("(C) 2014-2017 TeskaLabs Ltd\n");
 	printf("https://www.seacat.io/\n\n");
@@ -14,7 +14,7 @@ static void print_usage(char *argv0)
 	printf("Usage: %s [ -vh ] [ -c FILE ]\n\n", argv0);
 
 	printf("Arguments:\n");
-	printf(" -c [--config] FILE     : Specify file path to configuration file\n                          default value location: '%s'\n", "TODO"/*sce_config.config_file*/);
+	printf(" -c [--config] FILE     : Specify file path to configuration file\n                          default value location: '%s'\n", sca_config.config_file);
 	printf(" -v [--verbose]         : Print more information (enable debug output)\n");
 	printf(" -h [--help]            : Show this help\n");
 }
