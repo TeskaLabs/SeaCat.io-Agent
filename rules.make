@@ -14,7 +14,7 @@ LDLIBS+=-lm
 CPPFLAGS+=-DSEACAT_VERSION=\"${VERSION}\"
 
 
-# Detect OS
+# Detect OS - must be a three letter, SeaCat compatible OS platform code
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
     OS = lnx
