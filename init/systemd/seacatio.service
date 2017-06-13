@@ -10,7 +10,7 @@ After=network.target
 [Service]
 Type=simple
 WorkingDirectory=/opt/seacatio
-ExecStart=/opt/seacatio/bin/seacatiod -c ./etc/seacatio.conf
+ExecStart=/opt/seacatio/bin/seacatiod -c /opt/seacatio/etc/seacatio.conf
 StandardOutput=null
 Restart=on-failure
 
