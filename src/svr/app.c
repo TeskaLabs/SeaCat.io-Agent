@@ -28,6 +28,11 @@ bool sca_app_init(struct sca_app * this)
 	this->seacatcc_write_queue = NULL;
 	this->seacatcc_write_queue_last = &this->seacatcc_write_queue;
 
+	if (ft_config.log_verbose)
+	{
+		ft_config.log_trace_mask |= FT_TRACE_ID_MEMPOOL;
+	}
+
 	ft_initialise();
 
 	ok = ft_context_init(&this->context);
