@@ -35,6 +35,8 @@ bool sca_app_init(struct sca_app * this)
 
 	ft_initialise();
 
+	FT_INFO("SeaCat.io Agent %s starting", SEACAT_VERSION);
+
 	ok = ft_context_init(&this->context);
 	if (!ok) return false;
 
