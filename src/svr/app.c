@@ -91,9 +91,7 @@ bool sca_app_init(struct sca_app * this)
 	this->exit_subscriber.data = this;
 
 	ev_init(&this->keepalive_w, sca_app_on_keepalive);
-	//TODO: Configure timer and even start of the timer (no-keepalive mode)
-	this->keepalive_w.repeat = 1.0;
-	ev_timer_again(this->context.ev_loop, &this->keepalive_w);
+	this->keepalive_w.repeat = sca_config.keepalive_interval;
 	this->keepalive_w.data = this;
 
 	// Start listening
@@ -129,6 +127,13 @@ int sca_app_run(struct sca_app * this)
 	int rc;
 
 	ASSERT_THIS();
+
+	// Start keep-alive ping
+	if (this->keepalive_w.repeat > 0.0)
+	{
+		ev_timer_again(this->context.ev_loop, &this->keepalive_w);
+		ev_invoke(this->context.ev_loop, &this->keepalive_w, 0);
+	}
 
 	pthread_create(&this->seacatcc_thread, NULL, sca_app_seacatcc_thread, this);
 
@@ -246,6 +251,8 @@ void sca_app_on_keepalive(struct ev_loop * loop, ev_timer * w, int revents)
 	struct sca_app * this = w->data;
 	ASSERT_THIS();
 
+	FT_DEBUG("Sending keep-alive ping");
+
 	struct ft_frame * frame = ft_pool_borrow(&this->context.frame_pool, (SPDY_CNTL_FRAME_VERSION_SPD3 << 16) | SPDY_CNTL_TYPE_PING);
 	if (frame == NULL) return;
 
@@ -258,4 +265,3 @@ void sca_app_on_keepalive(struct ev_loop * loop, ev_timer * w, int revents)
 	ft_frame_flip(frame);
 	sca_reactor_send(frame);
 }
-

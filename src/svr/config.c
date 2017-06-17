@@ -9,6 +9,9 @@ struct sca_config sca_config =
 	.application_id_suffix = NULL, //TODO: Allow to configure this one
 
 	.var_dir = SEACATIO_PREFIX "/var", //TODO: This is from configuration
+
+	//DOCU: [seacatio] keepalive_interval
+	.keepalive_interval = 120.0, //Configure by [seacatio] keepalive_interval
 };
 
 ///
@@ -21,6 +24,11 @@ static int sca_config_parse_handler(void * user, const char * section, const cha
 	{
 		sca_config.application_id_suffix = strdup(value);
 		return 1;
+	}
+
+	else if (FT_INI_MATCH("seacatio", "keepalive_interval"))
+	{
+		sca_config.keepalive_interval = atof(value);
 	}
 
 	return 0;  // unknown section/name, error

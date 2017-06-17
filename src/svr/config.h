@@ -9,6 +9,8 @@ struct sca_config
 	const char * application_id_suffix;
 
 	const char * var_dir;
+
+	double keepalive_interval;
 };
 
 extern struct sca_config sca_config;
