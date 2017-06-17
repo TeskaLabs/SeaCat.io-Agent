@@ -49,8 +49,7 @@ bool sca_app_init(struct sca_app * this)
 	// Prepare listening control socket(s)
 	ft_listener_list_init(&this->cntl_listeners_list);
 
-	// TODO: Read control socket address from config
-	rc = ft_listener_list_extend(&this->cntl_listeners_list, &sca_cntl_listener_delegate, &this->context, AF_UNIX, SOCK_STREAM, "./scad.cntl", "");
+	rc = ft_listener_list_extend(&this->cntl_listeners_list, &sca_cntl_listener_delegate, &this->context, AF_UNIX, SOCK_STREAM, sca_config.cntl_socket_name, "");
 	if (rc < 0) exit(EXIT_FAILURE);
 
 	FT_LIST_FOR(&this->cntl_listeners_list, node)

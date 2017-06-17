@@ -9,6 +9,7 @@ struct sca_config
 	const char * application_id_suffix;
 
 	const char * var_dir;
+	const char * cntl_socket_name;
 
 	double keepalive_interval;
 };

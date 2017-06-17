@@ -9,6 +9,7 @@ struct sca_config sca_config =
 	.application_id_suffix = NULL, //TODO: Allow to configure this one
 
 	.var_dir = SEACATIO_PREFIX "/var", //TODO: This is from configuration
+	.cntl_socket_name = SEACATIO_CNTL_SOCKET_NAME,
 
 	//DOCU: [seacatio] keepalive_interval
 	.keepalive_interval = 120.0, //Configure by [seacatio] keepalive_interval
