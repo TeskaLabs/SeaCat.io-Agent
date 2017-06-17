@@ -255,10 +255,13 @@ void sca_reactor_hook_client_state_changed(void)
 {
 	sca_loop_lock_acquire();
 	bool old_is_ready = sca_is_ready();
-	seacatcc_state(sca_app.seacatcc_state);
-	ft_pubsub_publish(NULL , SCA_PUBSUB_TOPIC_SEACATCC_STATE_CHANGED, sca_app.seacatcc_state);
-	bool new_is_ready = sca_is_ready();
 
+	seacatcc_state(sca_app.seacatcc_state);
+	FT_DEBUG("C-Core state: %s", sca_app.seacatcc_state);
+
+	ft_pubsub_publish(NULL , SCA_PUBSUB_TOPIC_SEACATCC_STATE_CHANGED, sca_app.seacatcc_state);
+
+	bool new_is_ready = sca_is_ready();
 	if ((old_is_ready == false) && (new_is_ready == true))
 	{
 		ft_pubsub_publish(NULL, SCA_PUBSUB_TOPIC_SEACATCC_IS_READY, sca_app.seacatcc_state);
