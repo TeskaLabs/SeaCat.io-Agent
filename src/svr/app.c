@@ -30,7 +30,7 @@ bool sca_app_init(struct sca_app * this)
 
 	if (ft_config.log_verbose)
 	{
-		ft_config.log_trace_mask |= FT_TRACE_ID_MEMPOOL;
+//		ft_config.log_trace_mask |= FT_TRACE_ID_MEMPOOL;
 	}
 
 	ft_initialise();
