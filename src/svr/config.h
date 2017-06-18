@@ -12,6 +12,7 @@ struct sca_config
 	const char * cntl_socket_name;
 
 	double keepalive_interval;
+	double connecting_interval;
 };
 
 extern struct sca_config sca_config;

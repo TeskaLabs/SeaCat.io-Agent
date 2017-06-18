@@ -13,6 +13,8 @@ struct sca_config sca_config =
 
 	//DOCU: [seacatio] keepalive_interval
 	.keepalive_interval = 120.0, //Configure by [seacatio] keepalive_interval
+	//DOCU: [seacatio] keepalive_interval
+	.connecting_interval = 30.0, //Configure by [seacatio] connecting_interval
 };
 
 ///
@@ -30,6 +32,11 @@ static int sca_config_parse_handler(void * user, const char * section, const cha
 	else if (FT_INI_MATCH("seacatio", "keepalive_interval"))
 	{
 		sca_config.keepalive_interval = atof(value);
+	}
+
+	else if (FT_INI_MATCH("seacatio", "connecting_interval"))
+	{
+		sca_config.connecting_interval = atof(value);
 	}
 
 	return 0;  // unknown section/name, error
