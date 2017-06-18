@@ -265,8 +265,6 @@ void sca_reactor_hook_client_state_changed(void)
 	if ((old_is_ready == false) && (new_is_ready == true))
 	{
 		ft_pubsub_publish(NULL, SCA_PUBSUB_TOPIC_SEACATCC_IS_READY, sca_app.seacatcc_state);
-		FT_INFO("Ready ...");
-		seacatcc_yield('c');
 	}
 	else if ((old_is_ready == true) && (new_is_ready == false))
 	{
@@ -279,7 +277,6 @@ void sca_reactor_hook_client_state_changed(void)
 void sca_reactor_hook_connected()
 {
 	sca_loop_lock_acquire();
-	FT_DEBUG("Connected");
 	ft_pubsub_publish(NULL, SCA_PUBSUB_TOPIC_SEACATCC_CONNECTED, NULL);
 	sca_loop_lock_release();
 }
@@ -287,7 +284,6 @@ void sca_reactor_hook_connected()
 void sca_reactor_hook_disconnected()
 {
 	sca_loop_lock_acquire();
-	FT_DEBUG("Disconnected");
 	ft_pubsub_publish(NULL, SCA_PUBSUB_TOPIC_SEACATCC_DISCONNECTED, NULL);
 	sca_loop_lock_release();
 }
