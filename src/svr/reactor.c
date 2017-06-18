@@ -84,7 +84,7 @@ void sca_reactor_send(struct ft_frame * frame)
 	assert(frame != NULL);
 	assert(*sca_app.seacatcc_write_queue_last == NULL);
 
-	if (sca_app.seacatcc_write_queue == NULL) seacatcc_yield('W');
+	seacatcc_yield('W');
 
 	*sca_app.seacatcc_write_queue_last = frame;
 	frame->next = NULL;
