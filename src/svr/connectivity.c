@@ -85,6 +85,22 @@ void sca_connectivity_on_disconnected(struct ft_subscriber * sub, struct ft_pubs
 	struct sca_connectivity * this = sub->data;
 	ASSERT_THIS();
 
+	if (sca_app.state == 'e')
+	{
+		int rc;
+
+		FT_INFO("Disconnected, ready to exit");
+
+		// Shutdown SeaCat CCore
+		rc = seacatcc_shutdown();
+		if (rc != SEACATCC_RC_OK)
+		{
+			FT_WARN("Error in seacatcc_shutdown: %d", rc);
+		}
+
+		return;
+	}
+
 	FT_INFO("Disconnected");
 
 	// Reconfigure to connecting procedure

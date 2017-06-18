@@ -229,22 +229,16 @@ restart:
 // We have been asked to exit, inform SeaCat C-Core about that ...
 void sca_on_exit(struct ft_subscriber * sub, struct ft_pubsub * pubsub, const char * topic, void * data)
 {
-	int rc;
 	assert(sub != NULL);
 	struct sca_app * this = sub->data;
 	ASSERT_THIS();
 
-	// Shutdown SeaCat CCore
-	rc = seacatcc_shutdown();
-	if (rc != SEACATCC_RC_OK)
-	{
-		FT_WARN("Error in seacatcc_shutdown: %d", rc);
-	}
 	this->state = 'e';
 
 	// Stop listening on control sockets
 	ft_listener_list_cntl(&this->cntl_listeners_list, FT_LISTENER_STOP);
 
+	// Exit connectivity
 	sca_connectivity_exit(&this->connectivity);
 
 	// Start killer timer
