@@ -137,12 +137,6 @@ int sca_app_run(struct sca_app * this)
 
 	ASSERT_THIS();
 
-	// Start keep-alive ping
-	// if (this->keepalive_w.repeat > 0.0)
-	// {
-	// 	ev_timer_again(this->context.ev_loop, &this->keepalive_w);
-	// 	ev_invoke(this->context.ev_loop, &this->keepalive_w, 0);
-	// }
 	this->state = 'r';
 
 	pthread_create(&this->seacatcc_thread, NULL, sca_app_seacatcc_thread, this);
