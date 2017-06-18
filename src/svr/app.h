@@ -7,6 +7,7 @@ struct sca_app
 
 	struct ft_subscriber exit_subscriber;
 	struct ev_prepare prepare_w;
+	struct ev_timer killer_timer_w;
 
 	char state; // 'i' - init, 'r' - running , 'e' - exiting
 

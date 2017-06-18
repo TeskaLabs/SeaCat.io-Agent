@@ -7,7 +7,7 @@ static void sca_on_exit(struct ft_subscriber *, struct ft_pubsub * pubsub, const
 static void * sca_app_seacatcc_thread(void * data);
 static void sca_app_on_seacatcc_check(struct ev_loop * loop, ev_check *w, int revents);
 static void sca_app_on_seacatcc_async(struct ev_loop * loop, ev_async * w, int revents);
-
+static void sca_app_on_killer_timer(struct ev_loop * loop, ev_timer * w, int revents);
 static void sca_app_on_prepare(struct ev_loop * loop, ev_prepare * w, int revents);
 
 static void sca_app_loop_release(struct ev_loop * loop);
@@ -93,6 +93,9 @@ bool sca_app_init(struct sca_app * this)
 	ft_subscriber_init(&this->exit_subscriber, sca_on_exit);
 	ft_subscriber_subscribe(&this->exit_subscriber, NULL, FT_PUBSUB_TOPIC_EXIT);
 	this->exit_subscriber.data = this;
+
+	ev_timer_init(&this->killer_timer_w, sca_app_on_killer_timer, 20.0, 0.0);
+	this->killer_timer_w.data = this;
 
 	ok = sca_connectivity_init(&this->connectivity);
 	if (!ok) exit(EXIT_FAILURE);
@@ -249,4 +252,14 @@ void sca_on_exit(struct ft_subscriber * sub, struct ft_pubsub * pubsub, const ch
 	ft_listener_list_cntl(&this->cntl_listeners_list, FT_LISTENER_STOP);
 
 	sca_connectivity_exit(&this->connectivity);
+
+	// Start killer timer
+	ev_timer_start(this->context.ev_loop, &this->killer_timer_w);
+	ev_unref(this->context.ev_loop);
+}
+
+void sca_app_on_killer_timer(struct ev_loop * loop, ev_timer * w, int revents)
+{
+	FT_FATAL("Forcing exit due to timeout");
+	exit(EXIT_FAILURE);
 }
