@@ -5,6 +5,7 @@ OBJS=	config.o \
 		app.o \
 		reactor.o \
 		cntl.o \
+		connectivity.o \
 		main.o
 
 CPPFLAGS += -DOS_NAME=\"${OS}\"

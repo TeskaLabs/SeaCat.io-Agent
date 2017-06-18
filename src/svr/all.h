@@ -13,6 +13,7 @@ struct sca_app;
 extern struct sca_app sca_app;
 
 #include "config.h"
+#include "connectivity.h"
 #include "app.h"
 #include "reactor.h"
 #include "cntl.h"
