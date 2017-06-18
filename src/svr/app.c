@@ -42,7 +42,11 @@ bool sca_app_init(struct sca_app * this)
 	ok = sca_config_load();
 	if (!ok) return false;
 
-	pthread_mutex_init(&this->seacatcc_loop_lock, 0);
+	pthread_mutexattr_t mutex_attr;
+	pthread_mutexattr_init(&mutex_attr);
+	pthread_mutexattr_settype(&mutex_attr, PTHREAD_MUTEX_RECURSIVE);
+
+	pthread_mutex_init(&this->seacatcc_loop_lock, &mutex_attr);
 	ev_set_loop_release_cb(this->context.ev_loop, sca_app_loop_release, sca_app_loop_acquire);
 
 	// Prepare listening control socket(s)
