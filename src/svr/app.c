@@ -22,6 +22,8 @@ bool sca_app_init(struct sca_app * this)
 
 	ASSERT_THIS();
 
+	this->state = 'i';
+
 	this->seacatcc_write_buffer = NULL;
 	this->seacatcc_read_buffer = NULL;
 	this->seacatcc_write_queue = NULL;
@@ -138,6 +140,7 @@ int sca_app_run(struct sca_app * this)
 	// 	ev_timer_again(this->context.ev_loop, &this->keepalive_w);
 	// 	ev_invoke(this->context.ev_loop, &this->keepalive_w, 0);
 	// }
+	this->state = 'r';
 
 	pthread_create(&this->seacatcc_thread, NULL, sca_app_seacatcc_thread, this);
 
@@ -240,6 +243,7 @@ void sca_on_exit(struct ft_subscriber * sub, struct ft_pubsub * pubsub, const ch
 	{
 		FT_WARN("Error in seacatcc_shutdown: %d", rc);
 	}
+	this->state = 'e';
 
 	// Stop listening on control sockets
 	ft_listener_list_cntl(&this->cntl_listeners_list, FT_LISTENER_STOP);
