@@ -38,7 +38,7 @@ static bool sca_cntl_on_accept_cb(struct ft_listener * listening_socket, int fd,
 	this->stream.base.socket.protocol = &this->spdy;
 	this->spdy.data = this;
 
-	ft_list_add(&app->cntl_list, new_node);
+	ft_list_append(&app->cntl_list, new_node);
 
 	FT_INFO("Control connection open");
 
