@@ -3,6 +3,7 @@
 # Reload this file by systemctl daemon-reload
 # Start by systemctl start seacatio
 # or by service seacatio start
+# Output of the agent can be observerd by sudo journalctl -u seacatio --no-pager
 
 [Unit]
 Description=SeaCat.io Agent
