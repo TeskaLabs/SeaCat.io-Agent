@@ -70,11 +70,11 @@ void sca_reactor_init()
 		exit(EXIT_FAILURE);
 	}
 
-	const char * capabilities[] = {
+	const char * characteristics[] = {
 		NULL, NULL
 	};
 
-	seacatcc_capabilities_store(capabilities);
+	seacatcc_characteristics_store(characteristics);
 
 }
 
