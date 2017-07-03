@@ -9,6 +9,8 @@ struct sca_connectivity
 	struct ft_subscriber ready_subscriber;
 	struct ft_subscriber connected_subscriber;
 	struct ft_subscriber disconnected_subscriber;
+
+	ev_tstamp network_error_at;
 };
 
 bool sca_connectivity_init(struct sca_connectivity *);

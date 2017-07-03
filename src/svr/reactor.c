@@ -220,8 +220,25 @@ void sca_reactor_hook_worker_request(char worker)
 			pthread_detach(thread);
 			break;
 
+		case 'f':
+			// Quit, when SeaCat indicates a fatal error
+			sca_loop_lock_acquire();
+			FT_WARN("SeaCat indicates an fatal error - quitting!");
+			ft_pubsub_publish(NULL, FT_PUBSUB_TOPIC_EXIT, NULL);
+			sca_loop_lock_release();
+			break;
+
+		case 'n':
+			// Network error
+			sca_loop_lock_acquire();
+			sca_app.connectivity.network_error_at = ev_time();
+			sca_loop_lock_release();
+			break;
+
 		default:
-			fprintf(stderr, "> %s w:'%c'\n", __func__, worker);
+			sca_loop_lock_acquire();
+			FT_WARN_P("Unhandled worker request '%c'", worker);
+			sca_loop_lock_release();
 	}
 }
 

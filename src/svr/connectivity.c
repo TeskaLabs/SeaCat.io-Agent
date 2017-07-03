@@ -12,6 +12,8 @@ bool sca_connectivity_init(struct sca_connectivity * this)
 {
 	ASSERT_THIS();
 
+	this->network_error_at = 0.0; // This means not observed
+
 	ev_init(&this->timer_w, NULL);
 	this->timer_w.data = this;
 
@@ -69,6 +71,8 @@ void sca_connectivity_on_connected(struct ft_subscriber * sub, struct ft_pubsub 
 	struct sca_connectivity * this = sub->data;
 	ASSERT_THIS();
 
+	this->network_error_at = 0.0; // This means not observed
+
 	FT_INFO("Connected");
 
 	// Reconfigure to keep-alive procedure
@@ -113,6 +117,17 @@ void sca_connectivity_on_disconnected(struct ft_subscriber * sub, struct ft_pubs
 
 void sca_connectivity_on_connecting(struct ev_loop * loop, ev_timer * w, int revents)
 {
+	assert(w != NULL);
+	struct sca_connectivity * this = w->data;
+	ASSERT_THIS();
+
+	if (sca_app.seacatcc_state[0] == 'n')
+	{
+		if ((ev_now(loop) - this->network_error_at) < 60.0) return;
+		FT_INFO("Trying to recover from a network connectivity loss");
+		seacatcc_yield(81);
+	}
+
 	FT_INFO("Connecting ...");
 	seacatcc_yield('c');
 }
