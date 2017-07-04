@@ -1,57 +1,35 @@
 #!/bin/sh -e 
 set -e
 
-## Detect CPU
-CPU='unknown'
-unamemstr=`uname -m`
-case $unamemstr in
-	'x86_64')
-		CPU='x86_64'
-		;;
-	arm*)
-		CPU='arm~'$unamemstr
-		;;
-	*)
-		CPU='unknown'
-		;;
-esac
+## Global configuration values
+BASE_URL=http://get.seacat.io/releases/
 
-## Detect platform and OS
-PLATFORM='unknown'
-OS='unknown'
-unamestr=`uname`
-case $unamestr in
-	'Linux')
-		PLATFORM='linux'
-		OS='gnu'
-		;;
-	'FreeBSD')
-		PLATFORM='freebsd'
-		;;
-	'WindowsNT')
-		PLATFORM='win'
-		;;
-	'Darwin')
-		PLATFORM='apple'
-		OS='darwin~'`uname -r`
-		;;
-	'SunOS')
-		PLATFORM='solaris'
-		;;
-	'AIX')
-		PLATFORM='aix'
-		;;
-	*)
-		PLATFORM='unknown'
-		;;
-esac
+## Produce an archive code 
+function arch_code() {
+	# OS / Kernel 
+	UNAMESSTR=`uname -s | tr '[:upper:]' '[:lower:]'`
 
-echo ${CPU}-${PLATFORM}-${OS}
-exit 0
+	# Machine
+	UNAMEMSTR=`uname -m | tr '[:upper:]' '[:lower:]'`
 
-ARCHIVE=seacatio-arm-linux-gnueabihf-v1703-alpha.3-debug.tar.gz
-URL=https://getseacatiostoracc.blob.core.windows.net/getseacatio/releases/
+	ARCHCODE=${UNAMESSTR}-${UNAMEMSTR}
 
-curl ${URL}${ARCHIVE} | tar xz -C /opt/
-chown -Rv root:root /opt/seacatio/
-touch /opt/seacatio/etc/seacat.conf
+	echo ${ARCHCODE}
+}
+
+
+while getopts "a" opt; do
+	case $opt in
+		a ) echo $(arch_code) && exit 0;;
+		\?) echo "Invalid option: -"$OPTARG"" >&2
+			exit 1;;
+		: ) echo "Option -"$OPTARG" requires an argument." >&2
+			exit 1;;
+	esac
+done
+
+# ARCHIVE=seacatio-arm-linux-gnueabihf-v1703-alpha.3-debug.tar.gz
+
+# curl ${URL}${ARCHIVE} | tar xz -C /opt/
+# chown -Rv root:root /opt/seacatio/
+# touch /opt/seacatio/etc/seacat.conf
