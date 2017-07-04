@@ -5,7 +5,7 @@
 
 static void print_usage(char *argv0)
 {
-	printf("SeaCat.io Agent %s for %s\n", SEACAT_VERSION "", SEACAT_TARGET_TRIPLET "");
+	printf("SeaCat.io Agent %s for %s\n", SEACAT_VERSION "", SEACAT_ARCHCODE "");
 	printf("\n%s\n", seacatio_ascii);
 	printf("(C) 2014-2017 TeskaLabs Ltd\n");
 	printf("https://www.seacat.io/\n\n");

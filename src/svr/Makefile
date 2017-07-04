@@ -20,8 +20,8 @@ CPPFLAGS+=-I$(ROOTDIR)/libft/include/
 LDLIBS+=-L$(ROOTDIR)/libft/src -lft
 
 # Include SeaCat CCore
-CPPFLAGS+=-I$(ROOTDIR)/seacatcc/$(TARGET_TRIPLET)/
-LDLIBS+=-L$(ROOTDIR)/seacatcc/$(TARGET_TRIPLET)/ -lseacatcc
+CPPFLAGS+=-I$(ROOTDIR)/seacatcc/$(ARCHCODE)/
+LDLIBS+=-L$(ROOTDIR)/seacatcc/$(ARCHCODE)/ -lseacatcc
 
 all: subdirs | $(BIN)
 

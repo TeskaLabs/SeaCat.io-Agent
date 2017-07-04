@@ -24,12 +24,9 @@ ifeq ($(UNAME_S),Darwin)
     OS = mac
 endif
 
-
-# Obtain target triplet
-# http://wiki.osdev.org/Target_Triplet
-TARGET_TRIPLET := $(shell $(CC) -dumpmachine)
-CPPFLAGS+=-DSEACAT_TARGET_TRIPLET=\"${TARGET_TRIPLET}\" -DSEACATIO_PREFIX=\"${SEACATIO_PREFIX}\"
-
+# Architecture code
+ARCHCODE := $(shell sh $(ROOTDIR)/get/install.sh -a)
+CPPFLAGS+=-DSEACAT_ARCHCODE=\"${ARCHCODE}\" -DSEACATIO_PREFIX=\"${SEACATIO_PREFIX}\"
 
 # OpenSSL
 OPENSSLINCPATH?=/usr/openssl/include
