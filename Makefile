@@ -1,5 +1,6 @@
 SUBDIRS=src
 CLEANSUBDIRS=libft
+EXTRACLEANDIR=distdir
 
 all: .libft subdirs
 
@@ -14,7 +15,7 @@ ROOTDIR=.
 include $(ROOTDIR)/rules.make
 
 
-DISTDIR:=$(ROOTDIR)/dist/seacatio
+DISTDIR:=$(ROOTDIR)/distdir/seacatio
 
 dist: all
 	@echo " [DI]" seacatio-$(TARGET_TRIPLET)-$(VERSION).tar.gz

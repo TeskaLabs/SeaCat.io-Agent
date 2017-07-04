@@ -2,6 +2,7 @@
 /bin/*
 /var/*
 /seacatcc/*
+/distdir
 
 # Distribution files
 /seacatio-*.tar.gz
