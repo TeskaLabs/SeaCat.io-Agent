@@ -1,5 +1,7 @@
 #include "all.h"
 
+//TODO: Consider auto-adding an 'bad connection' detector - it means that if there is e.g. NAT that disconnect the agent frequently, shorten the keepalive interval accordingly
+
 static void sca_connectivity_on_keepalive(struct ev_loop * loop, ev_timer * w, int revents);
 static void sca_connectivity_on_connecting(struct ev_loop * loop, ev_timer * w, int revents);
 static void sca_connectivity_on_ready(struct ft_subscriber * sub, struct ft_pubsub * pubsub, const char * topic, void * data);
