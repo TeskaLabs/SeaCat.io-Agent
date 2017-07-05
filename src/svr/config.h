@@ -4,6 +4,7 @@
 struct sca_config
 {
 	const char * config_file;
+	const char * config_dir;
 
 	const char * application_id;
 	const char * application_id_suffix;
