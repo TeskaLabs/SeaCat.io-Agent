@@ -81,7 +81,10 @@ void sca_connectivity_on_connected(struct ft_subscriber * sub, struct ft_pubsub 
 	ev_timer_stop(sca_app.context.ev_loop, &this->timer_w);
 	ev_set_cb(&this->timer_w, sca_connectivity_on_keepalive);
 	this->timer_w.repeat = sca_config.keepalive_interval;
-	ev_timer_start(sca_app.context.ev_loop, &this->timer_w);
+	if (sca_config.keepalive_interval > 0.0)
+	{
+		ev_timer_start(sca_app.context.ev_loop, &this->timer_w);
+	}
 }
 
 
@@ -113,7 +116,10 @@ void sca_connectivity_on_disconnected(struct ft_subscriber * sub, struct ft_pubs
 	ev_timer_stop(sca_app.context.ev_loop, &this->timer_w);
 	ev_set_cb(&this->timer_w, sca_connectivity_on_connecting);
 	this->timer_w.repeat = sca_config.connecting_interval;
-	ev_timer_start(sca_app.context.ev_loop, &this->timer_w);
+	if (sca_config.connecting_interval > 0.0)
+	{
+		ev_timer_start(sca_app.context.ev_loop, &this->timer_w);
+	}
 }
 
 
@@ -133,6 +139,7 @@ void sca_connectivity_on_connecting(struct ev_loop * loop, ev_timer * w, int rev
 	FT_INFO("Connecting ...");
 	seacatcc_yield('c');
 }
+
 
 void sca_connectivity_on_keepalive(struct ev_loop * loop, ev_timer * w, int revents)
 {
