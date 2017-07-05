@@ -15,7 +15,7 @@ struct sca_config sca_config =
 
 	//DOCU: [seacatio] keepalive_interval
 	.keepalive_interval = 120.0, //Configure by [seacatio] keepalive_interval
-	//DOCU: [seacatio] keepalive_interval
+	//DOCU: [seacatio] connecting_interval
 	.connecting_interval = 30.0, //Configure by [seacatio] connecting_interval
 };
 
