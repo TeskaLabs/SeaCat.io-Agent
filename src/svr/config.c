@@ -14,7 +14,9 @@ struct sca_config sca_config =
 	.cntl_socket_name = SEACATIO_CNTL_SOCKET_NAME,
 
 	//DOCU: [seacatio] keepalive_interval
-	.keepalive_interval = 120.0, //Configure by [seacatio] keepalive_interval
+	.keepalive_interval = 100.0, //Configure by [seacatio] keepalive_interval
+	// The value should be less than 120 seconds otherwise NAT connection tracking removes open connections abruptly
+
 	//DOCU: [seacatio] connecting_interval
 	.connecting_interval = 30.0, //Configure by [seacatio] connecting_interval
 };
